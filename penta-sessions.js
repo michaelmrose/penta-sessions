@@ -75,7 +75,7 @@ group.commands.add(['sessions[ave]','mkses[sion]'],
                 options.sessiondir+args[0]) : options.sessiondir+Date.now()+'.penta'
         let file = io.File(filename);
       
-        dactyl.assert(!file.exists() || args.bang, _("io.exists", file.path.quote()));
+        dactyl.assert(!file.exists() || args.bang, _("io.exists", file.path));
 
         let sesop = options.sessionoptions.toString();
         let lines = new Array('" vim: set ft=pentadactyl:\n');
@@ -109,12 +109,12 @@ group.commands.add(['sessions[ave]','mkses[sion]'],
         try {
             file.write(lines.join('\n'));
         } catch(e) {
-            dactyl.echoerr(_("io.notWriteable", file.path.quote()));
+            dactyl.echoerr(_("io.notWriteable", file.path));
             return;
         };
         
         options.sessionfile=file.path;
-        dactyl.echomsg('Saved session to '+file.path.quote());
+        dactyl.echomsg('Saved session to '+file.path);
     }, {
         argCount: '?',
     	bang: true,
@@ -128,7 +128,7 @@ group.commands.add(['sessiona[ppend]', 'sessionadd'],
         let file = io.File(/^~?\//.test(args[0]) ? args[0] : options.sessiondir+args[0]);
       
         if (!file.exists() || !file.isWritable() || file.isDirectory()) {
-            dactyl.echoerr(_("io.notWriteable", file.path.quote()));
+            dactyl.echoerr(_("io.notWriteable", file.path));
             return;
         }
 
@@ -144,11 +144,11 @@ group.commands.add(['sessiona[ppend]', 'sessionadd'],
         try {
             file.write(data,'>>');
         } catch(e) {
-            dactyl.echoerr(_("io.notWriteable", file.path.quote()));
+            dactyl.echoerr(_("io.notWriteable", file.path));
             return;
         };
         
-        dactyl.echomsg('Appended tab(s) to session file '+file.path.quote());
+        dactyl.echomsg('Appended tab(s) to session file '+file.path);
     }, {
         argCount: '1',
     	bang: true,
@@ -162,7 +162,7 @@ group.commands.add(['sessionl[oad]'],
         let file = io.File(/^~?\//.test(args[0]) ? args[0] : options.sessiondir+args[0]);
 
         if (!file.exists() || !file.isReadable() || file.isDirectory()) {
-            dactyl.echoerr(_("io.notReadable", file.path.quote()));
+            dactyl.echoerr(_("io.notReadable", file.path));
             return;
         }
 
@@ -172,7 +172,7 @@ group.commands.add(['sessionl[oad]'],
         sessionscript.unload();
         options.sessionfile=file.path;
         if(!args.bang) tabs.remove(curtab);
-        dactyl.echomsg('Loaded session from '+file.path.quote());
+        dactyl.echomsg('Loaded session from '+file.path);
     }, {
         argCount: "1",
     	bang: true,
@@ -180,17 +180,17 @@ group.commands.add(['sessionl[oad]'],
     }
 );
 
-group.mappings.add([modes.NORMAL], ['ss'],
+group.mappings.add([modes.NORMAL], [',ss'],
     'Save current window',
     function() CommandExMode().open('sessionsave! ')
 );
 
-group.mappings.add([modes.NORMAL], ['sa'],
+group.mappings.add([modes.NORMAL], [',sa'],
     'Append tab(s) to a session file',
     function() CommandExMode().open('sessionappend ')
 );
 
-group.mappings.add([modes.NORMAL], ['sl'],
+group.mappings.add([modes.NORMAL], [',sl'],
     'Load a session file',
     function() CommandExMode().open('sessionload ')
 );
